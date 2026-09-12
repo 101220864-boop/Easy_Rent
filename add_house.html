@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyRent - Add Property</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { display: flex; background: #f0f2f5; min-height: 100vh; }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: #333;
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+        }
+        .sidebar h2 { color: #28a745; margin-bottom: 40px; text-align: center; }
+        .sidebar a {
+            display: block;
+            color: #ccc;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover, .sidebar .active { background: #28a745; color: white; }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 40px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* The Form Container */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 30px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; }
+
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #28a745; }
+
+        /* Media Upload Styling */
+        .media-upload {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fafafa;
+            transition: 0.3s;
+        }
+        .media-upload:hover { border-color: #28a745; background: #f1fff4; }
+        .media-upload i { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+        /* Button Styling */
+        .btn-group {
+            grid-column: span 2;
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-primary { background: #28a745; color: white; flex: 2; }
+        .btn-secondary { background: #eee; color: #333; flex: 1; text-decoration: none; text-align: center; }
+
+        /* Status Badge */
+        .status-select { background: #fff8e1; border-color: #ffe082; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>🏠 EasyRent</h2>
+        <a href="Admin.html">Dashboard</a>
+        <a href="#" class="active">Add New House</a>
+        <a href="home.html" >View Site</a>
+        <a href="login.html" style="margin-top: 50px; color: #ff6b6b;">Logout</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Listing New Property</h1>
+            <p>Admin: Batoul & Israa</p>
+        </div>
+
+        <form class="form-card">
+            <div>
+                <h3>Property Information</h3>
+                <div style="margin-bottom: 20px;">
+                    <label>House Name / Title</label>
+                    <input type="text" placeholder="e.g. Modern Villa Beirut" required>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label>Exact Location</label>
+                    <input type="text" placeholder="Street name, City" required>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Price ($/Month)</label>
+                        <input type="number" placeholder="0.00">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Property Type</label>
+                        <select>
+                            <option>Apartment</option>
+                            <option>Villa</option>
+                            <option>Studio</option>
+                            <option>Office</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3>Media Upload (Image or Video)</h3>
+                <div class="media-upload" onclick="document.getElementById('fileInput').click()">
+                    <span>📁</span>
+                    <p>Click to upload House Photos or Video</p>
+                    <small>Support: JPG, PNG, MP4</small>
+                    <input type="file" id="fileInput" hidden accept="image/*,video/*">
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <label>Listing Status</label>
+                    <select class="status-select">
+                        <option>Available Now</option>
+                        <option>Under Maintenance</option>
+                        <option>Hidden</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="full-width">
+                <label>Detailed Description</label>
+                <textarea rows="5" placeholder="Mention number of rooms, bathrooms, amenities like WiFi, Parking..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Publish Property Now</button>
+                <a href="admin-dashboard.html" class="btn btn-secondary">Discard Changes</a>
+            </div>
+        </form>
+    </main>
+
+</body>
+</html>

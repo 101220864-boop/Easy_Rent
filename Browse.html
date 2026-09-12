@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Houses - EasyRent</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    /* Navbar - Matching Home Page */
+    .navbar {
+        background-color: #333;
+        padding: 15px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        height: auto; /* Overriding your 75px for better spacing */
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .navbar nav {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .navbar a {
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .navbar a:hover, .navbar a.active {
+        color: #28a745;
+    }
+
+    .register-btn {
+        background-color: #28a745;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+    /* Hero Section */
+    .hero {
+        height: 250px;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+    /* Search Box */
+    .search-box {
+        background: white;
+        width: 80%;
+        max-width: 900px;
+        margin: -40px auto 40px;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        gap: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    .search-box input, .search-box select {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .search-box button {
+        padding: 12px 30px;
+        border: none;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .search-box button:hover { background: #218838; }
+
+    /* Main Content Layout */
+    .page-content {
+        display: flex;
+        gap: 30px;
+        padding: 0 50px 50px;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+    /* Sidebar Filters */
+    .filter-panel {
+        width: 260px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        height: fit-content;
+    }
+
+    .filter-panel h3 { border-bottom: 2px solid #28a745; padding-bottom: 10px; margin-bottom: 15px; }
+    .filter-panel h4 { margin: 20px 0 10px; font-size: 1rem; }
+    .filter-panel label { display: block; margin: 8px 0; color: #555; cursor: pointer; }
+
+    /* Houses Grid */
+    .houses-section { flex: 1; }
+    .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .section-title p { color: #28a745; font-weight: bold; }
+
+    .houses-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .house-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+
+    .house-card:hover { transform: translateY(-5px); }
+    .house-card img { width: 100%; height: 200px; object-fit: cover; }
+
+    .badge {
+        position: absolute;
+        top: 10px; left: 10px;
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .card-body { padding: 15px; }
+    .house-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .house-header h3 { font-size: 1.1rem; color: #333; }
+    .house-header p { color: #28a745; font-weight: bold; }
+
+    .location { color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+    .features { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; padding: 10px 0; border-top: 1px solid #eee; }
+
+    .house-card button {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #28a745;
+        background: transparent;
+        color: #28a745;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .house-card button:hover {
+        background: #28a745;
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .page-content { flex-direction: column; padding: 0 20px; }
+        .filter-panel { width: 100%; }
+        .search-box { width: 95%; flex-direction: column; }
+    }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">🏠 EasyRent</div>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="browse.html" class="active">Browse Houses</a>
+    <a href="login.html">Login</a>
+    <a href="register.html" class="register-btn">Register</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Find Your Perfect Home</h1>
+  <p>Browse available houses for rent and choose the best one for you.</p>
+</section>
+
+<section class="search-box">
+  <input type="text" id="searchInput" placeholder="Search by location...">
+
+  <select id="priceFilter">
+    <option value="all">All Prices</option>
+    <option value="low">$300 - $500</option>
+    <option value="medium">$500 - $800</option>
+    <option value="high">$800+</option>
+  </select>
+
+  <button onclick="filterHouses()">Search</button>
+</section>
+
+<main class="page-content">
+
+  <aside class="filter-panel">
+    <h3>Filter</h3>
+
+    <h4>Location</h4>
+    <label><input type="checkbox" checked> All Locations</label>
+    <label><input type="checkbox"> Beirut</label>
+    <label><input type="checkbox"> Saida</label>
+    <label><input type="checkbox"> Jbeil</label>
+    <label><input type="checkbox"> Tripoli</label>
+
+    <h4>Property Type</h4>
+    <label><input type="checkbox" checked> All Types</label>
+    <label><input type="checkbox"> Apartment</label>
+    <label><input type="checkbox"> House</label>
+    <label><input type="checkbox"> Villa</label>
+  </aside>
+
+  <section class="houses-section">
+    <div class="section-title">
+      <h2>Available Houses</h2>
+      <p id="resultCount">Showing 6 results</p>
+    </div>
+
+    <div class="houses-container">
+
+      <div class="house-card" data-location="beirut" data-price="600">
+        <span class="badge">NEW</span>
+        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994" alt="Modern House">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>Modern Family House</h3>
+            <p>$600<span>/month</span></p>
+          </div>
+          <p class="location">📍 Beirut</p>
+          <div class="features">
+            <span>🛏 3 Beds</span>
+            <span>🛁 2 Baths</span>
+            <span>📐 120 m²</span>
+          </div>
+          <button>Rent House →</button>
+        </div>
+      </div>
+
+      <div class="house-card" data-location="saida" data-price="400">
+        <span class="badge green">FEATURED</span>
+        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be" alt="Cozy Apartment">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>Cozy Apartment</h3>
+            <p>$400<span>/month</span></p>
+          </div>
+          <p class="location">📍 Saida</p>
+          <div class="features">
+            <span>🛏 2 Beds</span>
+            <span>🛁 1 Bath</span>
+            <span>📐 85 m²</span>
+          </div>
+          <button>Rent House →</button>
+        </div>
+      </div>
+
+      <div class="house-card" data-location="jbeil" data-price="1200">
+        <span class="badge purple">PREMIUM</span>
+        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae" alt="Luxury Villa">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>Luxury Villa</h3>
+            <p>$1200<span>/month</span></p>
+          </div>
+          <p class="location">📍 Jbeil</p>
+          <div class="features">
+            <span>🛏 4 Beds</span>
+            <span>🛁 3 Baths</span>
+            <span>📐 250 m²</span>
+          </div>
+          <button>Rent House→</button>
+        </div>
+      </div>
+
+      <div class="house-card" data-location="beirut" data-price="350">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="Studio Apartment">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>Studio Apartment</h3>
+            <p>$350<span>/month</span></p>
+          </div>
+          <p class="location">📍 Beirut</p>
+          <div class="features">
+            <span>🛏 1 Bed</span>
+            <span>🛁 1 Bath</span>
+            <span>📐 45 m²</span>
+          </div>
+          <button>Rent House →</button>
+        </div>
+      </div>
+
+      <div class="house-card" data-location="batroun" data-price="750">
+        <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6" alt="Spacious House">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>Spacious House</h3>
+            <p>$750<span>/month</span></p>
+          </div>
+          <p class="location">📍 Batroun</p>
+          <div class="features">
+            <span>🛏 3 Beds</span>
+            <span>🛁 2 Baths</span>
+            <span>📐 150 m²</span>
+          </div>
+          <button>Rent House →</button>
+        </div>
+      </div>
+
+      <div class="house-card" data-location="tripoli" data-price="500">
+        <img src="https://images.unsplash.com/photo-1494526585095-c41746248156" alt="City Apartment">
+        <div class="card-body">
+          <div class="house-header">
+            <h3>City Center Apartment</h3>
+            <p>$500<span>/month</span></p>
+          </div>
+          <p class="location">📍 Tripoli</p>
+          <div class="features">
+            <span>🛏 2 Beds</span>
+            <span>🛁 1 Bath</span>
+            <span>📐 90 m²</span>
+          </div>
+          <button>Rent House →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+    function filterHouses() {
+  let searchValue = document.getElementById("searchInput").value.toLowerCase();
+  let priceValue = document.getElementById("priceFilter").value;
+  let cards = document.querySelectorAll(".house-card");
+  let count = 0;
+
+  cards.forEach(function(card) {
+    let location = card.getAttribute("data-location");
+    let price = Number(card.getAttribute("data-price"));
+
+    let matchLocation = location.includes(searchValue);
+
+    let matchPrice =
+      priceValue === "all" ||
+      (priceValue === "low" && price >= 300 && price <= 500) ||
+      (priceValue === "medium" && price > 500 && price <= 800) ||
+      (priceValue === "high" && price > 800);
+
+    if (matchLocation && matchPrice) {
+      card.style.display = "block";
+      count++;
+    } else {
+      card.style.display = "none";
+    }
+  });
+
+  document.getElementById("resultCount").textContent = "Showing " + count + " results";
+}
+</script>
+</body>
+</html>
+
